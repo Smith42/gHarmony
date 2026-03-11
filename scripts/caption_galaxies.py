@@ -170,6 +170,72 @@ Based on this information and what you see in the image, write the galaxy's dati
     return formatted_prompt
 
 
+def generate_galaxy_name(image, information):
+    """Generate a creative dating-app display name for a galaxy using Gemini Flash 2.0.
+
+    Inspects the galaxy's morphological metadata to pick out standout traits,
+    then asks Gemini to mint a short, memorable profile name.
+
+    Args:
+        image: PIL Image of the galaxy.
+        information: Dictionary containing galaxy metadata.
+
+    Returns:
+        str: A 1-3 word dating-style display name.
+    """
+    # Collect notable morphological traits to steer the name
+    traits = []
+
+    def _above(key, threshold=0.5):
+        val = information.get(key)
+        return val is not None and not (isinstance(val, float) and math.isnan(val)) and val > threshold
+
+    if _above("has-spiral-arms-euclid_yes_fraction", 0.5):
+        traits.append("spiral arms")
+    if _above("bar-euclid_strong_fraction", 0.3):
+        traits.append("strong bar")
+    if _above("merging-euclid_merger_fraction", 0.3):
+        traits.append("currently merging")
+    if _above("how-rounded-euclid_cigar-shaped_fraction", 0.3):
+        traits.append("cigar-shaped")
+    if _above("bulge-size-euclid_dominant_fraction", 0.3):
+        traits.append("dominant bulge")
+    if _above("smooth-or-featured-euclid_smooth_fraction", 0.7):
+        traits.append("very smooth")
+    if _above("disk-edge-on-euclid_yes_fraction", 0.5):
+        traits.append("edge-on disk")
+    if _above("spiral-winding-euclid_tight_fraction", 0.5):
+        traits.append("tightly wound spirals")
+    if _above("spiral-winding-euclid_loose_fraction", 0.5):
+        traits.append("loosely wound spirals")
+    if _above("clumps-euclid_yes_fraction", 0.5):
+        traits.append("clumpy")
+
+    trait_hint = (
+        f" This galaxy has notable traits: {', '.join(traits)}."
+        if traits
+        else ""
+    )
+
+    prompt = (
+        "You are naming a galaxy for its dating app profile. Give it a short, "
+        "memorable, flirty display name (1-3 words max) that sounds like a fun "
+        "username or nickname. It should hint at the galaxy's appearance or "
+        f"personality.{trait_hint}\n\n"
+        "Examples of good names: \"Spiral Daddy\", \"Thicc Bulge\", \"Arms4Days\", "
+        "\"SmoothOperator\", \"MergerMaven\", \"BarStar\", \"EdgeLord\", "
+        "\"ClumpyBoi\", \"TightlyWound\"\n\n"
+        "Respond with ONLY the name, nothing else."
+    )
+
+    response = client.models.generate_content(
+        contents=[prompt, image],
+        model="gemini-3-flash-preview",
+    )
+
+    return response.text.strip().strip('"').strip("'")
+
+
 def caption_image(image, information):
     """Generate caption for an image using Gemini Flash 2.0"""
     # Prepare the prompt
@@ -178,7 +244,7 @@ def caption_image(image, information):
     # Generate response from Gemini
     response = client.models.generate_content(
         contents=[prompt, image],
-        model="gemini-2.0-flash",
+        model="gemini-3-flash-preview",
     )
 
     return response.text
@@ -195,16 +261,19 @@ def process_example(example):
             image = Image.open(io.BytesIO(img))
 
         image_id = example['id_str']
+        name = generate_galaxy_name(image, example)
         caption = caption_image(image, example)
 
         return {
             'id_str': image_id,
+            'name': name,
             'caption': caption
         }
     except Exception as e:
         print(f"Error processing image {example.get('id_str', 'unknown')}: {str(e)}")
         return {
             'id_str': example['id_str'],
+            'name': None,
             'caption': None
         }
 
