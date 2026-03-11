@@ -1,6 +1,6 @@
 ---
-title: GHarmony
-emoji: 🐠
+title: g-Harmony
+emoji: 🌌
 colorFrom: blue
 colorTo: gray
 sdk: gradio
