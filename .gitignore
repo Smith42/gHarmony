@@ -1,3 +1,24 @@
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+.venv
+*.log
+.DS_Store
+tmp/data/processed/*
+.python-version
+pyproject.toml
+uv.lock 
+.claude
+logs/
+state/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
