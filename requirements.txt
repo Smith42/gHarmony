@@ -4,4 +4,4 @@ gunicorn==21.2.0
 huggingface-hub==0.20.1
 python-dotenv==1.1.1
 datasets==2.16.1
-pillow==10.1.0
+pillow>=10.2.0
