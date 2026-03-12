@@ -73,6 +73,9 @@ def register_callbacks(app):
         if not ctx.triggered_id:
             raise PreventUpdate
 
+        if (left_clicks in [0, None]) and (right_clicks in [0, None]):
+            raise PreventUpdate
+
         if current_pair is None:
             raise PreventUpdate
 
