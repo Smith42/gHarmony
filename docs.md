@@ -53,6 +53,15 @@ src/
 - Automatically synced to HuggingFace dataset repository using `CommitScheduler`
 - Thread-safe updates using Python threading locks
 
+### Resetting Rankings
+To reset all galaxy rankings back to 1500 ELO:
+1. Go to the dataset repository: https://huggingface.co/datasets/astrohayley/gHarmony-logs
+2. Delete the `state/elo_state.json` file (or the entire `state/` folder)
+3. Restart the HuggingFace Space
+4. The app will automatically start fresh with default ratings for all galaxies
+
+The reset mechanism works because the ELO loading code falls back to default values when it cannot find the state file.
+
 ### Session Management
 - Tracks pairs already seen to avoid repetition within a session
 - Prevents initial crown display bug with click validation
