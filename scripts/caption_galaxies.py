@@ -223,8 +223,8 @@ def generate_galaxy_name(image, information):
         "username or nickname. It should hint at the galaxy's appearance or "
         f"personality.{trait_hint}\n\n"
         "Examples of good names: \"Spiral Daddy\", \"Thicc Bulge\", \"Arms4Days\", "
-        "\"SmoothOperator\", \"MergerMaven\", \"BarStar\", \"EdgeLord\", "
-        "\"ClumpyBoi\", \"TightlyWound\"\n\n"
+        "\"Smooth Operator\", \"Merger Maven\", \"Bar Star\", \"Edge Lord\", "
+        "\"Clumpy Boi\", \"Tightly Wound\"\n\n"
         "Respond with ONLY the name, nothing else."
     )
 
